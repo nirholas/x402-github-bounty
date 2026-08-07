@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>x402-github-bounty — fund GitHub issues, per call</title>
+<meta name="description" content="Non-custodial GitHub bounties: signed certificates, merged-PR verification reports and payout receipts, paid in USDC over x402 on Base or Solana.">
+<style>
+:root{
+  --accent:#0052ff;--accent-2:#14f195;--bg:#ffffff;--fg:#0a0c10;--muted:#57606a;
+  --card:#f6f8fa;--border:#d0d7de;--code-bg:#0d1117;--code-fg:#e6edf3;
+}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#0d1117;--fg:#e6edf3;--muted:#9198a1;--card:#161b22;--border:#30363d}
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--fg);line-height:1.6;-webkit-text-size-adjust:100%}
+.wrap{max-width:900px;margin:0 auto;padding:0 20px}
+header{padding:72px 0 40px;text-align:center}
+.badge{display:inline-block;font-size:13px;font-weight:600;color:var(--accent);border:1px solid var(--accent);border-radius:999px;padding:2px 12px;margin-bottom:16px}
+h1{font-size:44px;letter-spacing:-1px;margin-bottom:12px}
+@media (max-width:560px){h1{font-size:32px}}
+.tagline{font-size:19px;color:var(--muted);max-width:660px;margin:0 auto 24px}
+.install{display:inline-block;max-width:100%;overflow-x:auto;background:var(--code-bg);color:var(--code-fg);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:14px;padding:10px 18px;border-radius:8px;margin-bottom:24px;white-space:nowrap}
+.btns a{display:inline-block;margin:4px 6px;padding:10px 20px;border-radius:8px;font-weight:600;text-decoration:none;font-size:15px}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-ghost{border:1px solid var(--border);color:var(--fg)}
+section{padding:32px 0}
+h2{font-size:26px;margin-bottom:14px;letter-spacing:-.5px}
+h3{font-size:18px;margin:20px 0 8px}
+p{margin-bottom:12px}
+ul{margin:0 0 12px 22px}
+li{margin-bottom:6px}
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:15px;min-width:520px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+th{color:var(--muted);font-size:13px;text-transform:uppercase;letter-spacing:.05em}
+td code,p code,li code,th code{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:13px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.price{color:var(--accent);font-weight:700;white-space:nowrap}
+pre{background:var(--code-bg);color:var(--code-fg);border-radius:10px;padding:18px;overflow-x:auto;font-size:13.5px;line-height:1.55;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.rails{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.rail{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 18px}
+.rail b{display:block;font-size:16px;margin-bottom:6px}
+.rail .k{color:var(--muted);font-size:13px}
+.rail code{font-size:12px;word-break:break-all}
+figure{margin:0}
+figcaption{color:var(--muted);font-size:13px;text-align:center;margin-top:8px}
+svg{max-width:100%;height:auto;display:block;margin:0 auto}
+footer{padding:40px 0;color:var(--muted);font-size:14px;text-align:center;border-top:1px solid var(--border);margin-top:48px}
+footer a{color:var(--accent);text-decoration:none}
+a{color:var(--accent)}
+</style>
+</head>
+<body>
+<header class="wrap">
+  <div class="badge">x402 · USDC on Base + Solana</div>
+  <h1>x402-github-bounty</h1>
+  <p class="tagline">Put money on a GitHub issue and get a <b>tamper-evident record</b> of it — certificate, verification, receipt. <b>$0.01</b> to mint, <b>$0.002</b> to verify. Non-custodial: the service never touches the bounty.</p>
+  <div class="install">git clone https://github.com/nirholas/x402-github-bounty &amp;&amp; cd x402-github-bounty &amp;&amp; npm install &amp;&amp; npm run dev</div>
+  <div class="btns">
+    <a class="btn-primary" href="https://github.com/nirholas/x402-github-bounty">GitHub</a>
+    <a class="btn-ghost" href="tutorial.md">Tutorial</a>
+    <a class="btn-ghost" href="api.md">API Reference</a>
+    <a class="btn-ghost" href="agents.md">For AI Agents</a>
+  </div>
+</header>
+
+<section class="wrap">
+  <h2>Pricing</h2>
+  <div class="tablewrap"><table>
+    <tr><th>Route</th><th>Price</th><th>What lands in the 200 body</th></tr>
+    <tr><td><code>POST /bounties</code></td><td class="price">$0.01</td><td>A signed <b>bounty certificate</b> — issue URL, title, pledged amount, terms, expiry — minted only after the issue is confirmed real and open through the live GitHub API. Plus a one-time <code>settleKey</code>.</td></tr>
+    <tr><td><code>GET /verify/:bountyId</code></td><td class="price">$0.002</td><td>A signed <b>verification report</b> from live GitHub state: is the issue closed, which merged PRs reference it, who wrote them, is the bounty eligible</td></tr>
+    <tr><td><code>POST /settle/:bountyId</code></td><td class="price">free</td><td>A signed <b>payout receipt</b>. Closing out costs nothing — you already paid to mint</td></tr>
+    <tr><td><code>GET /bounties</code> · <code>POST /check-signature</code> · <code>GET /</code> · <code>/health</code> · <code>/skill.md</code> · <code>/.well-known/x402</code> · <code>/openapi.json</code></td><td class="price">free</td><td>Public board, signature validation, discovery</td></tr>
+  </table></div>
+</section>
+
+<section class="wrap">
+  <h2>How a paid call works</h2>
+  <figure>
+  <svg viewBox="0 0 880 250" role="img" aria-label="Flow: the agent requests a resource, the server answers 402 with two payment rails, the agent signs on Base or Solana, the facilitator verifies and settles, and the server returns 200 with the artifact.">
+    <defs>
+      <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0,0 L10,5 L0,10 z" fill="var(--accent)"/>
+      </marker>
+    </defs>
+    <g font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" text-anchor="middle">
+      <!-- 1. agent -->
+      <rect x="8" y="93" width="118" height="64" rx="10" fill="var(--card)" stroke="var(--border)"/>
+      <text x="67" y="118" font-size="14" font-weight="600" fill="var(--fg)">Agent</text>
+      <text x="67" y="137" font-size="11" fill="var(--muted)">GET /resource</text>
+  
+      <!-- 2. the 402 -->
+      <rect x="166" y="93" width="170" height="64" rx="10" fill="var(--card)" stroke="var(--accent)"/>
+      <text x="251" y="116" font-size="14" font-weight="600" fill="var(--accent)">402 Payment Required</text>
+      <text x="251" y="136" font-size="11" fill="var(--muted)">accepts: [ two rails ]</text>
+  
+      <!-- 3a. EVM rail -->
+      <rect x="376" y="25" width="164" height="58" rx="10" fill="var(--card)" stroke="var(--border)"/>
+      <text x="458" y="47" font-size="13" font-weight="600" fill="var(--fg)">USDC on Base</text>
+      <text x="458" y="65" font-size="11" fill="var(--muted)">EIP-3009 signature</text>
+  
+      <!-- 3b. Solana rail -->
+      <rect x="376" y="167" width="164" height="58" rx="10" fill="var(--card)" stroke="var(--border)"/>
+      <text x="458" y="189" font-size="13" font-weight="600" fill="var(--fg)">USDC on Solana</text>
+      <text x="458" y="207" font-size="11" fill="var(--muted)">signed SPL transfer</text>
+  
+      <text x="458" y="130" font-size="12" font-style="italic" fill="var(--muted)">the client picks</text>
+  
+      <!-- 4. settle -->
+      <rect x="576" y="93" width="170" height="64" rx="10" fill="var(--card)" stroke="var(--border)"/>
+      <text x="661" y="116" font-size="13" font-weight="600" fill="var(--fg)">X-PAYMENT</text>
+      <text x="661" y="136" font-size="11" fill="var(--muted)">facilitator: verify → settle</text>
+  
+      <!-- 5. the goods -->
+      <rect x="786" y="93" width="86" height="64" rx="10" fill="var(--accent)"/>
+      <text x="829" y="118" font-size="14" font-weight="700" fill="#fff">200</text>
+      <text x="829" y="136" font-size="11" fill="#dbe6ff">artifact</text>
+  
+      <g fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#ah)">
+        <path d="M126,125 L158,125"/>
+        <path d="M336,116 C356,116 356,54 368,54"/>
+        <path d="M336,134 C356,134 356,196 368,196"/>
+        <path d="M540,54 C556,54 556,116 568,116"/>
+        <path d="M540,196 C556,196 556,134 568,134"/>
+        <path d="M746,125 L778,125"/>
+      </g>
+    </g>
+  </svg>
+    <figcaption>One round trip of overhead. Every 402 quotes both rails; the client signs whichever chain it holds USDC on.</figcaption>
+  </figure>
+</section>
+
+<section class="wrap">
+  <h2>Two rails, one price</h2>
+  <div class="rails">
+    <div class="rail">
+      <b>USDC on Base</b>
+      <div class="k">network <code>base-sepolia</code> / <code>base</code></div>
+      <div class="k">scheme <code>exact</code> · EIP-3009 <code>transferWithAuthorization</code></div>
+      <div class="k">payTo <code>0x40252CFDF8B20Ed757D61ff157719F33Ec332402</code></div>
+    </div>
+    <div class="rail">
+      <b>USDC on Solana</b>
+      <div class="k">network <code>solana</code> / <code>solana-devnet</code></div>
+      <div class="k">scheme <code>exact</code> · SPL <code>transferChecked</code>, fee sponsored</div>
+      <div class="k">payTo <code>WwwuGbqHrwF5RG89KhUbmRWEvjnRH9k5kVM5p7T3WwW</code></div>
+    </div>
+  </div>
+  <p style="margin-top:14px">Both rails appear in the <code>accepts</code> array of every 402. Settlement runs through
+  the <a href="https://x402.org/facilitator">x402 facilitator</a>, and the 200 carries an
+  <code>X-PAYMENT-RESPONSE</code> receipt naming the rail and the transaction.</p>
+</section>
+
+<section class="wrap">
+  <h2>Quickstart</h2>
+  <pre># 1. run it — .env.example already has working defaults
+npm install &amp;&amp; npm run dev              # http://localhost:4021
+
+# 2. mint without paying → the dual-rail challenge
+curl -s -X POST localhost:4021/bounties -H 'content-type: application/json' \
+  -d '{"issueUrl":"https://github.com/nodejs/node/issues/1","amount":25}' \
+  | jq '.accepts[] | {network, payTo, maxAmountRequired}'
+# { "network": "base-sepolia", "payTo": "0x40252CF…2402", "maxAmountRequired": "10000" }
+# { "network": "solana",       "payTo": "WwwuGbqH…T3WwW", "maxAmountRequired": "10000" }
+
+# 3. pay $0.01 → the signed certificate lands in the 200 body
+const pay = wrapFetchWithPayment(fetch, wallet);
+const res = await pay(`${BASE}/bounties`, { method: "POST", body: … });
+const { certificate, signature, settleKey } = await res.json();
+
+# 4. later — buy proof that someone fixed it ($0.002)
+await pay(`${BASE}/verify/${certificate.bountyId}`);
+// { report: { issue: { state: "closed" }, mergedPrs: [{ number: 418, author: "…" }],
+//             eligible: true }, signature: "…" }</pre>
+</section>
+
+<section class="wrap">
+  <h2>Non-custodial, and that is the point</h2>
+  <p>This service <b>never holds your money</b>. The $0.01 buys the certificate; the <code>amount</code> you declare is a pledge signed into it. You pay the claimant yourself and record it with <code>POST /settle/:bountyId</code>, which returns the signed receipt.</p>
+  <p>Custody is the hard part of every bounty platform — it is where the fees, the lock-ups, the disputes and the regulatory surface come from. Strip it out and what is actually scarce remains: a tamper-evident record that <i>this issue was open, this amount was pledged, this PR merged, this payout happened</i>. That record is the product, and it costs a cent.</p>
+</section>
+
+<section class="wrap">
+  <h2>Signed artifacts</h2>
+  <p>Certificates, reports and receipts are HMAC-SHA256 over canonical JSON — keys sorted recursively, so the signature is stable regardless of field order. Validate any of them for free:</p>
+  <pre>curl -s -X POST localhost:4021/check-signature \
+  -H 'content-type: application/json' \
+  -d '{"payload": &lt;the signed object&gt;, "signature": "&lt;hex&gt;"}'
+
+{ "valid": true, "type": "x402-bounty-certificate", "checkedAt": "…" }</pre>
+  <p>Set <code>SIGNING_SECRET</code> in production — with the default dev secret (the server warns at boot) anyone running this code can forge a certificate that looks like yours. And read a signature for what it is: proof that <i>this deployment observed that GitHub state at that time</i>, not proof that anyone escrowed funds.</p>
+</section>
+
+<section class="wrap">
+  <h2>Live GitHub, no fixtures</h2>
+  <p>Every certificate and every report is built from the GitHub REST API at request time. Minting checks the issue exists, is an issue rather than a PR, and is still open — otherwise you get a 404, 400 or 409 and no certificate. Verification reads the issue timeline for cross-referenced pull requests and confirms each one actually merged.</p>
+  <p><code>GITHUB_TOKEN</code> is optional: without it you get GitHub's 60 requests/hour anonymous quota, with it 5,000/hour plus issues in private repos the token can read. There is no fixture mode.</p>
+</section>
+
+<footer class="wrap">
+  <p>
+    <a href="https://github.com/nirholas/x402-github-bounty">GitHub</a> ·
+    <a href="https://github.com/nirholas/x402-github-bounty/blob/main/skill.md">skill.md</a> ·
+    <a href="https://github.com/nirholas/x402-github-bounty/blob/main/public/.well-known/x402">.well-known/x402</a> ·
+    <a href="https://github.com/nirholas/x402-github-bounty/blob/main/openapi.json">openapi.json</a> ·
+    <a href="https://x402.org">x402 protocol</a>
+  </p>
+  <p>Part of the <a href="https://github.com/nirholas/x402-suite">x402 Suite</a> · Apache-2.0 · <a href="mailto:nichxbt@gmail.com">nichxbt@gmail.com</a></p>
+</footer>
+</body>
+</html>

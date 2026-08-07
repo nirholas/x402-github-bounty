@@ -1,0 +1,234 @@
+{
+  "x402Version": 1,
+  "name": "x402-github-bounty",
+  "description": "Fund GitHub issues with x402 — signed bounty certificates, merged-PR verification reports, settlement receipts. Pay in USDC on Base or Solana; your client picks the rail.",
+  "homepage": "https://nirholas.github.io/x402-github-bounty/",
+  "skill": "/skill.md",
+  "openapi": "/openapi.json",
+  "contact": "nichxbt@gmail.com",
+  "custody": "non-custodial — this service signs certificates and reports; it never holds bounty funds",
+  "facilitator": {
+    "evm": "https://x402.org/facilitator",
+    "solana": "https://facilitator.payai.network"
+  },
+  "rails": [
+    {
+      "rail": "evm",
+      "network": "base-sepolia",
+      "asset": "USDC",
+      "assetAddress": "0x036CbD53842c5426634e7929541eC2318f3dCF7e",
+      "payTo": "0x40252CFDF8B20Ed757D61ff157719F33Ec332402"
+    },
+    {
+      "rail": "solana",
+      "network": "solana",
+      "asset": "USDC",
+      "assetAddress": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "payTo": "WwwuGbqHrwF5RG89KhUbmRWEvjnRH9k5kVM5p7T3WwW"
+    }
+  ],
+  "resources": [
+    {
+      "resource": "POST /bounties",
+      "description": "Create a signed bounty certificate on a live-verified open GitHub issue; body {issueUrl, amount, terms?, funder?, expiryDays?}",
+      "price": "$0.01",
+      "asset": "USDC",
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "certificate": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "const": "x402-bounty-certificate"
+              },
+              "bountyId": {
+                "type": "string"
+              },
+              "issueUrl": {
+                "type": "string"
+              },
+              "repo": {
+                "type": "string"
+              },
+              "issueNumber": {
+                "type": "integer"
+              },
+              "issueTitle": {
+                "type": "string"
+              },
+              "amount": {
+                "type": "string"
+              },
+              "currency": {
+                "type": "string"
+              },
+              "terms": {
+                "type": "string"
+              },
+              "funder": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "expiresAt": {
+                "type": "string"
+              }
+            }
+          },
+          "signature": {
+            "type": "string"
+          },
+          "settleKey": {
+            "type": "string"
+          },
+          "verifyUrl": {
+            "type": "string"
+          }
+        }
+      },
+      "networks": [
+        "base-sepolia",
+        "base",
+        "solana",
+        "solana-devnet"
+      ],
+      "accepts": [
+        {
+          "scheme": "exact",
+          "network": "base-sepolia",
+          "asset": "USDC",
+          "payTo": "0x40252CFDF8B20Ed757D61ff157719F33Ec332402",
+          "maxAmountRequired": "10000"
+        },
+        {
+          "scheme": "exact",
+          "network": "solana",
+          "asset": "USDC",
+          "payTo": "WwwuGbqHrwF5RG89KhUbmRWEvjnRH9k5kVM5p7T3WwW",
+          "maxAmountRequired": "10000"
+        }
+      ],
+      "inputSchema": {
+        "type": "object",
+        "required": [
+          "issueUrl",
+          "amount"
+        ],
+        "properties": {
+          "issueUrl": {
+            "type": "string",
+            "description": "https://github.com/owner/repo/issues/N (or owner/repo#N)"
+          },
+          "amount": {
+            "type": "number",
+            "minimum": 0.01,
+            "maximum": 1000000,
+            "description": "pledged bounty in USD"
+          },
+          "terms": {
+            "type": "string"
+          },
+          "funder": {
+            "type": "string"
+          },
+          "expiryDays": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 365,
+            "default": 90
+          }
+        }
+      }
+    },
+    {
+      "resource": "GET /verify/:bountyId",
+      "description": "Live merged-PR verification report from real GitHub state, HMAC-signed",
+      "price": "$0.002",
+      "asset": "USDC",
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "report": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "const": "x402-bounty-verification"
+              },
+              "bountyId": {
+                "type": "string"
+              },
+              "issue": {
+                "type": "object"
+              },
+              "mergedPrs": {
+                "type": "array"
+              },
+              "eligible": {
+                "type": "boolean"
+              },
+              "eligibleReason": {
+                "type": "string"
+              },
+              "source": {
+                "type": "string",
+                "const": "github-live"
+              },
+              "checkedAt": {
+                "type": "string"
+              }
+            }
+          },
+          "signature": {
+            "type": "string"
+          }
+        }
+      },
+      "networks": [
+        "base-sepolia",
+        "base",
+        "solana",
+        "solana-devnet"
+      ],
+      "accepts": [
+        {
+          "scheme": "exact",
+          "network": "base-sepolia",
+          "asset": "USDC",
+          "payTo": "0x40252CFDF8B20Ed757D61ff157719F33Ec332402",
+          "maxAmountRequired": "2000"
+        },
+        {
+          "scheme": "exact",
+          "network": "solana",
+          "asset": "USDC",
+          "payTo": "WwwuGbqHrwF5RG89KhUbmRWEvjnRH9k5kVM5p7T3WwW",
+          "maxAmountRequired": "2000"
+        }
+      ]
+    }
+  ],
+  "freeResources": [
+    {
+      "resource": "POST /settle/:bountyId",
+      "description": "Close a bounty with a signed payout receipt. Authorised by the settleKey issued with the certificate.",
+      "price": "free"
+    },
+    {
+      "resource": "GET /bounties",
+      "description": "Public bounty board — every certificate this deployment has issued, minus secrets.",
+      "price": "free"
+    },
+    {
+      "resource": "POST /check-signature",
+      "description": "Validate any certificate, report or receipt this server signed.",
+      "price": "free"
+    }
+  ]
+}
