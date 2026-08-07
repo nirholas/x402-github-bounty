@@ -156,10 +156,10 @@ a{color:var(--accent)}
 <section class="wrap">
   <h2>Quickstart</h2>
   <pre># 1. run it — .env.example already has working defaults
-npm install &amp;&amp; npm run dev              # http://localhost:4021
+npm install &amp;&amp; npm run dev              # http://localhost:4027
 
 # 2. mint without paying → the dual-rail challenge
-curl -s -X POST localhost:4021/bounties -H 'content-type: application/json' \
+curl -s -X POST localhost:4027/bounties -H 'content-type: application/json' \
   -d '{"issueUrl":"https://github.com/nodejs/node/issues/1","amount":25}' \
   | jq '.accepts[] | {network, payTo, maxAmountRequired}'
 # { "network": "base-sepolia", "payTo": "0x40252CF…2402", "maxAmountRequired": "10000" }
@@ -185,7 +185,7 @@ await pay(`${BASE}/verify/${certificate.bountyId}`);
 <section class="wrap">
   <h2>Signed artifacts</h2>
   <p>Certificates, reports and receipts are HMAC-SHA256 over canonical JSON — keys sorted recursively, so the signature is stable regardless of field order. Validate any of them for free:</p>
-  <pre>curl -s -X POST localhost:4021/check-signature \
+  <pre>curl -s -X POST localhost:4027/check-signature \
   -H 'content-type: application/json' \
   -d '{"payload": &lt;the signed object&gt;, "signature": "&lt;hex&gt;"}'
 

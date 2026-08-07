@@ -4,16 +4,14 @@
 
 x402-github-bounty lets any agent or human put money on a GitHub issue. Creating a bounty live-verifies the issue via the GitHub REST API and returns an HMAC-signed bounty certificate. Anyone can then buy a verification report — live GitHub state showing whether the issue closed and which merged PRs reference it — and the funder settles with a signed payout receipt.
 
-**Base URL**: `http://localhost:4021` when self-hosted — replace with the deployment you are
+**Base URL**: `http://localhost:4027` when self-hosted — replace with the deployment you are
 talking to. **Contact**: nichxbt@gmail.com
 
 **Custody**: this service is non-custodial. It verifies GitHub state and signs certificates,
 reports and receipts. It never holds the bounty money — the funder pays the claimant
 directly and the signed receipt is the settlement record.
 
-## Endpoints
-
-### POST /bounties — $0.01
+## `POST /bounties` — $0.01
 
 Create a bounty on a live-verified open GitHub issue.
 
@@ -27,7 +25,7 @@ Create a bounty on a live-verified open GitHub issue.
   "expiryDays": 90
 }
 ```
-- **Returns**: the signed certificate (the purchased artifact), plus a secret `settleKey` that authorizes settlement:
+**Response 200** — the signed certificate (the purchased artifact), plus a secret `settleKey` that authorises settlement:
 ```json
 {
   "certificate": {
@@ -50,11 +48,19 @@ Create a bounty on a live-verified open GitHub issue.
 }
 ```
 
-### GET /verify/:bountyId — $0.002
+## `GET /verify/:bountyId` — $0.002
 
-Live merged-PR verification report (real GitHub state, signed).
+A signed verification report built from live GitHub state at request time: is the issue
+closed, which merged PRs reference it, who authored them, and whether the bounty is eligible
+to pay out. Pay-per-poll — each call is a fresh, signed snapshot.
 
-- **Returns**:
+**Parameters**
+
+| name | in | type | required | notes |
+|---|---|---|---|---|
+| `bountyId` | path | string | yes | The `bountyId` from a certificate issued by this deployment |
+
+**Response 200**
 ```json
 {
   "report": {
@@ -71,12 +77,45 @@ Live merged-PR verification report (real GitHub state, signed).
 }
 ```
 
-### POST /settle/:bountyId — free (settle-key auth)
+## `POST /settle/:bountyId` — free
 
-- **Body**: `{"settleKey": "...", "payoutAddress": "0x...", "prNumber": 124}`
-- **Returns**: signed payout receipt `{receipt: {bountyId, amount, payoutAddress, payoutPr, settledAt}, signature}`. Marks the bounty settled. Settlement is free because the fee was already paid when the certificate was minted, and because a funder should never be charged to close out.
+Close a bounty and get the signed payout receipt back immediately. Free because the mint fee
+already paid for this bounty's lifecycle, and because a funder should never be charged to do
+the right thing. Marks the bounty `settled`; a second attempt returns `409`.
 
-### Free routes
+**Parameters**
+
+| name | in | type | required | notes |
+|---|---|---|---|---|
+| `bountyId` | path | string | yes | The bounty being closed |
+| `settleKey` | body | string | yes | The secret returned once with the certificate; stored only as a hash |
+| `payoutAddress` | body | string | yes | `0x` + 40 hex — where you are sending the money |
+| `prNumber` | body | integer | no | The merged PR being paid for, recorded in the receipt |
+
+**Response 200**
+
+```json
+{
+  "receipt": {
+    "type": "x402-bounty-payout-receipt",
+    "bountyId": "0f0c4b9e-…",
+    "issueUrl": "https://github.com/nodejs/node/issues/1",
+    "amount": "25.00",
+    "currency": "USD",
+    "payoutAddress": "0xClaimantWallet",
+    "payoutPr": 124,
+    "settledAt": "2026-09-02T10:14:00.000Z",
+    "note": "The funder is responsible for transferring the bounty amount to payoutAddress; this receipt is the signed settlement record."
+  },
+  "signature": "3ab8…"
+}
+```
+
+**You still owe the money.** This service is non-custodial — it never received your bounty,
+so it cannot forward it. The receipt is a signed, timestamped record that you committed to
+pay and to whom.
+
+## Free routes
 
 | route | returns |
 | --- | --- |
@@ -102,12 +141,12 @@ Base (EVM) and USDC on Solana. Your client picks whichever it can sign.**
     { "scheme": "exact", "network": "base-sepolia", "maxAmountRequired": "10000",
       "asset": "0x036CbD53842c5426634e7929541eC2318f3dCF7e",
       "payTo": "0x40252CFDF8B20Ed757D61ff157719F33Ec332402",
-      "resource": "http://localhost:4021/bounties", "mimeType": "application/json",
+      "resource": "http://localhost:4027/bounties", "mimeType": "application/json",
       "maxTimeoutSeconds": 60, "extra": { "name": "USDC", "version": "2" } },
     { "scheme": "exact", "network": "solana", "maxAmountRequired": "10000",
       "asset": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
       "payTo": "WwwuGbqHrwF5RG89KhUbmRWEvjnRH9k5kVM5p7T3WwW",
-      "resource": "http://localhost:4021/bounties", "mimeType": "application/json",
+      "resource": "http://localhost:4027/bounties", "mimeType": "application/json",
       "maxTimeoutSeconds": 60,
       "extra": { "name": "USD Coin", "decimals": 6, "feePayer": "2wKupLR9q6wXYppw8Gr2NvWxKBUqm4PPJKkQfoxHDBg4" } }
   ]

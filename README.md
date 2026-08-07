@@ -54,13 +54,13 @@ git clone https://github.com/nirholas/x402-github-bounty.git
 cd x402-github-bounty
 npm install
 cp .env.example .env      # already filled with working defaults
-npm run dev               # http://localhost:4021
+npm run dev               # http://localhost:4027
 ```
 
 Ask without paying and you get the dual-rail challenge:
 
 ```bash
-curl -i -s -X POST localhost:4021/bounties \
+curl -i -s -X POST localhost:4027/bounties \
   -H 'content-type: application/json' \
   -d '{"issueUrl":"https://github.com/nodejs/node/issues/1","amount":25}'
 # HTTP/1.1 402 Payment Required
@@ -112,7 +112,7 @@ recursively, so the signature is stable regardless of field order). Validate any
 free:
 
 ```bash
-curl -s -X POST localhost:4021/check-signature \
+curl -s -X POST localhost:4027/check-signature \
   -H 'content-type: application/json' \
   -d '{"payload": <the signed object>, "signature": "<hex>"}'
 # { "valid": true, "type": "x402-bounty-certificate", "checkedAt": "…" }

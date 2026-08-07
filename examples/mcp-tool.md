@@ -14,7 +14,7 @@ import { createWalletClient, http, publicActions } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { baseSepolia } from "viem/chains";
 
-const BASE_URL = process.env.X402_BOUNTY_URL || "http://localhost:4021";
+const BASE_URL = process.env.X402_BOUNTY_URL || "http://localhost:4027";
 
 // One wallet, reused for every purchase. Its balance IS the agent's spending
 // cap — fund it with what you are willing to let Claude spend, and no more.
@@ -68,7 +68,7 @@ await server.connect(new StdioServerTransport());
       "command": "npx",
       "args": ["tsx", "/path/to/mcp-server.ts"],
       "env": {
-        "X402_BOUNTY_URL": "http://localhost:4021",
+        "X402_BOUNTY_URL": "http://localhost:4027",
         "PRIVATE_KEY": "0x..."
       }
     }

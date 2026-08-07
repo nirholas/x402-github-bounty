@@ -40,7 +40,7 @@ npm run dev
 ```
 
 ```
-x402-github-bounty listening on http://localhost:4021
+x402-github-bounty listening on http://localhost:4027
 Payment rails (USDC — the client picks):
   evm     base-sepolia   → 0x40252CFDF8B20Ed757D61ff157719F33Ec332402  via https://x402.org/facilitator
   solana  solana         → WwwuGbqHrwF5RG89KhUbmRWEvjnRH9k5kVM5p7T3WwW  via https://facilitator.payai.network
@@ -57,7 +57,7 @@ Routes:
 ## 4. Your first 402
 
 ```bash
-curl -i -s -X POST localhost:4021/bounties \
+curl -i -s -X POST localhost:4027/bounties \
   -H 'content-type: application/json' \
   -d '{"issueUrl":"https://github.com/nodejs/node/issues/1","amount":25}'
 ```
@@ -139,7 +139,7 @@ put it somewhere durable now.
 ## 7. Buy proof that someone fixed it
 
 ```bash
-curl -s localhost:4021/verify/$BOUNTY_ID -H "X-PAYMENT: $PAID_2000" | jq .report
+curl -s localhost:4027/verify/$BOUNTY_ID -H "X-PAYMENT: $PAID_2000" | jq .report
 ```
 
 ```json
@@ -173,7 +173,7 @@ GitHub at `checkedAt`. There is nothing to subscribe to and nothing to wait for.
 ## 8. Settle — free
 
 ```bash
-curl -s -X POST localhost:4021/settle/$BOUNTY_ID \
+curl -s -X POST localhost:4027/settle/$BOUNTY_ID \
   -H 'content-type: application/json' \
   -d '{"settleKey":"b71e…","payoutAddress":"0xClaimantWallet","prNumber":418}' | jq
 ```
@@ -203,7 +203,7 @@ Settling is idempotent-by-refusal: a second attempt gets `409 ALREADY_CLOSED`.
 ## 9. Verify a signature — free
 
 ```bash
-curl -s -X POST localhost:4021/check-signature \
+curl -s -X POST localhost:4027/check-signature \
   -H 'content-type: application/json' \
   -d "{\"payload\": $CERT_JSON, \"signature\": \"9f2c…\"}"
 # { "valid": true, "type": "x402-bounty-certificate", "checkedAt": "…" }

@@ -3,14 +3,14 @@
 No SDK — just HTTP, so you can see exactly what the protocol does.
 
 ```bash
-npm install && npm run dev     # http://localhost:4021
+npm install && npm run dev     # http://localhost:4027
 ```
 
 ## 0. Discover the service for free
 
 ```bash
-curl -s localhost:4021/ | jq
-curl -s localhost:4021/.well-known/x402 | jq '.resources[] | {resource, price}'
+curl -s localhost:4027/ | jq
+curl -s localhost:4027/.well-known/x402 | jq '.resources[] | {resource, price}'
 ```
 
 ```
@@ -21,7 +21,7 @@ curl -s localhost:4021/.well-known/x402 | jq '.resources[] | {resource, price}'
 ## 1. Mint a certificate without paying → 402 with **both** rails
 
 ```bash
-curl -i -s -X POST localhost:4021/bounties \
+curl -i -s -X POST localhost:4027/bounties \
   -H 'content-type: application/json' \
   -d '{"issueUrl":"https://github.com/nodejs/node/issues/1","amount":25}'
 ```
@@ -40,7 +40,7 @@ Content-Type: application/json
       "scheme": "exact",
       "network": "base-sepolia",
       "maxAmountRequired": "10000",             // 10000 base units = $0.01 USDC (6 dp)
-      "resource": "http://localhost:4021/bounties",
+      "resource": "http://localhost:4027/bounties",
       "description": "Mint a signed bounty certificate against a live-verified open GitHub issue",
       "mimeType": "application/json",
       "payTo": "0x40252CFDF8B20Ed757D61ff157719F33Ec332402",
@@ -52,7 +52,7 @@ Content-Type: application/json
       "scheme": "exact",
       "network": "solana",
       "maxAmountRequired": "10000",
-      "resource": "http://localhost:4021/bounties",
+      "resource": "http://localhost:4027/bounties",
       "description": "Mint a signed bounty certificate against a live-verified open GitHub issue",
       "mimeType": "application/json",
       "payTo": "WwwuGbqHrwF5RG89KhUbmRWEvjnRH9k5kVM5p7T3WwW",
@@ -70,7 +70,7 @@ you declared is a pledge signed into it.
 Just the rails:
 
 ```bash
-curl -s -X POST localhost:4021/bounties -H 'content-type: application/json' \
+curl -s -X POST localhost:4027/bounties -H 'content-type: application/json' \
   -d '{"issueUrl":"https://github.com/nodejs/node/issues/1","amount":25}' \
   | jq '.accepts[] | {network, asset, payTo, maxAmountRequired}'
 ```
@@ -118,7 +118,7 @@ PRIVATE_KEY=0xyourTestnetKey npm run client
 ## 3. Retry with the header → 200 + the certificate
 
 ```bash
-curl -i -s -X POST localhost:4021/bounties \
+curl -i -s -X POST localhost:4027/bounties \
   -H 'content-type: application/json' \
   -H "X-PAYMENT: $X_PAYMENT" \
   -d '{"issueUrl":"https://github.com/nodejs/node/issues/1","amount":25,"funder":"0xYourWallet"}'
@@ -159,7 +159,7 @@ already closed, you would have got a 404 / 400 / 409 instead — and no certific
 ## 4. Buy a verification report — $0.002
 
 ```bash
-curl -s localhost:4021/verify/$BOUNTY_ID -H "X-PAYMENT: $X_PAYMENT_2000" | jq .report
+curl -s localhost:4027/verify/$BOUNTY_ID -H "X-PAYMENT: $X_PAYMENT_2000" | jq .report
 ```
 
 ```json
@@ -185,7 +185,7 @@ The price is separate ($0.002 → `maxAmountRequired: "2000"`), so it needs its 
 ## 5. Settle — free
 
 ```bash
-curl -s -X POST localhost:4021/settle/$BOUNTY_ID \
+curl -s -X POST localhost:4027/settle/$BOUNTY_ID \
   -H 'content-type: application/json' \
   -d '{"settleKey":"b71e…","payoutAddress":"0xClaimantWallet","prNumber":124}' | jq
 ```
@@ -209,7 +209,7 @@ curl -s -X POST localhost:4021/settle/$BOUNTY_ID \
 ## 6. Check any signature — free
 
 ```bash
-curl -s -X POST localhost:4021/check-signature \
+curl -s -X POST localhost:4027/check-signature \
   -H 'content-type: application/json' \
   -d "{\"payload\": $CERTIFICATE_JSON, \"signature\": \"9f2c…\"}" | jq
 # { "valid": true, "type": "x402-bounty-certificate", "checkedAt": "…" }

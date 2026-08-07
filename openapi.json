@@ -16,7 +16,7 @@
   },
   "servers": [
     {
-      "url": "http://localhost:4021",
+      "url": "http://localhost:4027",
       "description": "local self-host"
     }
   ],
@@ -711,7 +711,7 @@
                   "scheme": "exact",
                   "network": "base-sepolia",
                   "maxAmountRequired": "10000",
-                  "resource": "http://localhost:4021/bounties",
+                  "resource": "http://localhost:4027/bounties",
                   "description": "Mint a signed bounty certificate against a live-verified open GitHub issue",
                   "mimeType": "application/json",
                   "payTo": "0x40252CFDF8B20Ed757D61ff157719F33Ec332402",
@@ -726,7 +726,7 @@
                   "scheme": "exact",
                   "network": "solana",
                   "maxAmountRequired": "10000",
-                  "resource": "http://localhost:4021/bounties",
+                  "resource": "http://localhost:4027/bounties",
                   "description": "Mint a signed bounty certificate against a live-verified open GitHub issue",
                   "mimeType": "application/json",
                   "payTo": "WwwuGbqHrwF5RG89KhUbmRWEvjnRH9k5kVM5p7T3WwW",

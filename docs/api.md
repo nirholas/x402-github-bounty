@@ -1,6 +1,6 @@
 # API reference
 
-Base URL: `http://localhost:4021` when self-hosting. Machine-readable equivalents:
+Base URL: `http://localhost:4027` when self-hosting. Machine-readable equivalents:
 [`openapi.json`](https://github.com/nirholas/x402-github-bounty/blob/main/openapi.json) and
 [`/.well-known/x402`](https://github.com/nirholas/x402-github-bounty/blob/main/public/.well-known/x402).
 
@@ -266,7 +266,7 @@ The public board: every certificate this deployment has issued, newest first, wi
 | `scheme` | `"exact"` | the only scheme accepted |
 | `network` | `"base-sepolia"` / `"solana"` | switched by `NETWORK` and `SOLANA_NETWORK` |
 | `maxAmountRequired` | `"10000"` | base units; USDC has 6 decimals, so this is $0.01 |
-| `resource` | `"http://localhost:4021/bounties"` | absolute URL being purchased |
+| `resource` | `"http://localhost:4027/bounties"` | absolute URL being purchased |
 | `description` | `"Mint a signed bounty certificate…"` | shown by wallets and the checkout modal |
 | `mimeType` | `"application/json"` | what the 200 will be |
 | `payTo` | `0x40252CF…` / `WwwuGbqH…` | receive address for that rail |
@@ -287,7 +287,7 @@ Paid responses set `X-PAYMENT-RESPONSE` to base64 JSON and repeat it inline as `
   "payer": "0xYourWallet",
   "amount": "10000",
   "asset": "0x036CbD53842c5426634e7929541eC2318f3dCF7e",
-  "resource": "http://localhost:4021/bounties"
+  "resource": "http://localhost:4027/bounties"
 }
 ```
 

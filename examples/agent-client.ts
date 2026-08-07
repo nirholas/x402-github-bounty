@@ -15,7 +15,7 @@ import { privateKeyToAccount } from "viem/accounts";
 import { base, baseSepolia } from "viem/chains";
 import { wrapFetchWithPayment, decodeXPaymentResponse } from "x402-fetch";
 
-const BASE_URL = process.env.BASE_URL ?? "http://localhost:4021";
+const BASE_URL = process.env.BASE_URL ?? "http://localhost:4027";
 const ISSUE_URL = process.env.ISSUE_URL ?? "https://github.com/expressjs/express/issues/5555";
 const PRIVATE_KEY = process.env.PRIVATE_KEY as `0x${string}` | undefined;
 
@@ -150,7 +150,7 @@ main().catch((err) => {
  * ---------------------------------------------------------------------------
  * The raw dual-rail 402, for reference
  * ---------------------------------------------------------------------------
- *   $ curl -s -X POST localhost:4021/bounties -H 'content-type: application/json' \
+ *   $ curl -s -X POST localhost:4027/bounties -H 'content-type: application/json' \
  *       -d '{"issueUrl":"https://github.com/nodejs/node/issues/1","amount":25}' \
  *     | jq '.accepts[] | {network, payTo, maxAmountRequired}'
  *   { "network": "base-sepolia", "payTo": "0x40252CFDF8B20Ed757D61ff157719F33Ec332402", "maxAmountRequired": "10000" }

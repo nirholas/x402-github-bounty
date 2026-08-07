@@ -17,7 +17,7 @@ import { putBounty, getBounty, listBounties, type BountyRecord } from "./store.j
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, "..");
 
-const PORT = Number(process.env.PORT || 4021);
+const PORT = Number(process.env.PORT || 4027);
 
 const PAID_ROUTES: RoutePrices = {
   "POST /bounties": "$0.01",
