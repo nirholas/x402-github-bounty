@@ -10,6 +10,7 @@ import {
   paymentReceipt,
   type RoutePrices,
 } from "./payments.js";
+import { ROUTE_SCHEMAS } from "./schemas.js";
 import { parseIssueUrl, getIssue, findMergedPrs, GitHubError } from "./github.js";
 import { sign, verify as verifySignature, sha256 } from "./sign.js";
 import { putBounty, getBounty, listBounties, type BountyRecord } from "./store.js";
@@ -104,7 +105,7 @@ app.post("/check-signature", (req, res) => {
 });
 
 // ---- paywall: everything below this line costs USDC ----
-app.use(paywall(PAID_ROUTES, { service: "x402-github-bounty", descriptions: DESCRIPTIONS }));
+app.use(paywall(PAID_ROUTES, { service: "x402-github-bounty", descriptions: DESCRIPTIONS, schemas: ROUTE_SCHEMAS }));
 
 /**
  * POST /bounties — $0.01
