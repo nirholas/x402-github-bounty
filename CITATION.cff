@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: If you use this software, please cite it as below.
+title: "x402-github-bounty"
+abstract: "Fund GitHub issues with x402: signed bounty certificates, merged-PR verification reports, settlement receipts. Non-custodial; pay in USDC on Base or Solana."
+license: Apache-2.0
+repository-code: "https://github.com/nirholas/x402-github-bounty"
+url: "https://three.ws"
+authors:
+  - name: three.ws
+    website: "https://three.ws"

@@ -1,0 +1,28 @@
+# x402-github-bounty
+
+> Fund GitHub issues with x402: signed bounty certificates, merged-PR verification reports, settlement receipts. Non-custodial; pay in USDC on Base or Solana.
+
+x402-github-bounty is an open-source repository by nirholas, part of the three.ws ecosystem.
+
+## Docs
+
+- [README](https://github.com/nirholas/x402-github-bounty/blob/HEAD/README.md): install, usage and reference
+- [What you get](https://github.com/nirholas/x402-github-bounty/blob/HEAD/README.md#what-you-get)
+- [Non-custodial, and that is the point](https://github.com/nirholas/x402-github-bounty/blob/HEAD/README.md#non-custodial-and-that-is-the-point)
+- [Why x402 for this](https://github.com/nirholas/x402-github-bounty/blob/HEAD/README.md#why-x402-for-this)
+- [Quickstart](https://github.com/nirholas/x402-github-bounty/blob/HEAD/README.md#quickstart)
+- [How x402 works here](https://github.com/nirholas/x402-github-bounty/blob/HEAD/README.md#how-x402-works-here)
+- [Dual-rail payment: Base or Solana](https://github.com/nirholas/x402-github-bounty/blob/HEAD/README.md#dual-rail-payment-base-or-solana)
+- [Signed artifacts](https://github.com/nirholas/x402-github-bounty/blob/HEAD/README.md#signed-artifacts)
+- [Real backend / API keys](https://github.com/nirholas/x402-github-bounty/blob/HEAD/README.md#real-backend-api-keys)
+- [AGENTS.md](https://github.com/nirholas/x402-github-bounty/blob/HEAD/AGENTS.md): guidance for coding agents
+- [Full text for LLMs](https://github.com/nirholas/x402-github-bounty/blob/HEAD/llms-full.txt): the README inlined
+
+## Project
+
+- [Source](https://github.com/nirholas/x402-github-bounty)
+- [Issues](https://github.com/nirholas/x402-github-bounty/issues)
+- [Discussions](https://github.com/nirholas/x402-github-bounty/discussions)
+- [Homepage](https://nirholas.github.io/x402-github-bounty/)
+- [three.ws](https://three.ws): the platform this is part of
+- [All repositories by nirholas](https://github.com/nirholas/nirholas#readme)
