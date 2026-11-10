@@ -1,0 +1,25 @@
+{
+  "name": "x402-github-bounty",
+  "owner": {
+    "name": "nirholas"
+  },
+  "description": "Fund GitHub issues with signed bounty certificates, merged-PR verification reports and settlement receipts over x402.",
+  "plugins": [
+    {
+      "name": "x402-github-bounty",
+      "source": "./plugins/x402-github-bounty",
+      "description": "Fund GitHub issues with signed bounty certificates, merged-PR verification reports and settlement receipts over x402.",
+      "category": "automation",
+      "tags": [
+        "x402",
+        "usdc",
+        "solana",
+        "base",
+        "agentic-commerce",
+        "http-402",
+        "github",
+        "bounty"
+      ]
+    }
+  ]
+}
